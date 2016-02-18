@@ -1,27 +1,90 @@
-/*body{
-	background-color: #252326;
-}*/
+#man
+{
+	position: absolute;
+	right: 10%;
+	top:60%;
+	width:20%;
+	height:40%;
+
+}
+
+
+#msg1,#msg2,#msg3,#msg4
+{
+	position: absolute;
+	left:0%;
+	top:-6rem;
+	width: auto;
+	background-color: white;
+	color:black;
+	
+
+}
+
+#image
+{
+	position:absolute;
+	left:0%;
+	top:30%;
+	width: 100%;
+	height:70%;
+	background-color: blue;
+
+}
+
 .nav-container{
 	background-color: #252326;
 	color: #C3A96A;
 	font-family: Roboto;
 }
+.mapster_tooltip{
+	color:black;
+}
 .top-info{
 	position: relative;
 	top: 1.5rem;
 	display: inline;
+	height: 3rem;
 }
+
+/*#right_half ul{
+	position: fixed;
+	margin-bottom: 5rem;
+}*/
 
 .top-info li{
 	float: left;
 }
+
+#stage{
+	cursor: pointer;
+}
+
+.stageinfo{
+	position: fixed;
+	border-radius: 0 10% 10% 10%;
+	left:75%;
+	top:6rem;
+	min-height: 5rem;
+	height: auto;
+	min-width:20rem;
+	width: auto;
+	background-color: #272727;
+	border: 3px solid white;
+	color: white;
+	z-index: 999;
+}
+
 #progressbartop{
-	position: absolute;
-	top:5rem;
+	position: fixed;
+	top:6rem;
+	font-size: 1.5rem;
+	z-index: 999;
+	vertical-align: middle;
 }
 #main-content{
 	position: absolute;
-	top:7.2rem;
+	top:11rem;
 	width: 100%;
 }
 #map_left
@@ -39,12 +102,12 @@
 	height: 90%;
 	border: 1px solid black;
 	overflow-y: auto;
-	font-size: 2rem;
+	font-size: 1.5rem;
 	line-height: 3.5rem;
 
 }
 .btn.btn-default{
-	font-size: 2rem;
+	font-size: 1.5rem;
 	line-height: 3.5rem;
 	margin-top: 1rem;
 }
@@ -57,7 +120,7 @@ input{
 #historytab>table{
 	margin-left:5%; 
 	width: 90%;
-	font-size: 2rem;
+	font-size: 1.5rem;
 	line-height: 3.5rem;
 }
 #selections{
@@ -70,12 +133,21 @@ input{
 	padding: 1rem;
 	overflow: auto;
 }
+#cashinfo{
+	border: 1px solid black;
+	position: relative;
+	left: 2.5%;
+	top:5%;
+	height: 20%;
+	width: 95%;
+	padding: 1rem;
+	overflow: auto;
+}
 #getdemand{
-	position: absolute;
-	bottom: 5%;
+	position: relative;
 	left: 2.5%;
 	width: 20%;
-	font-size: 2rem;
+	font-size: 1.5rem;
 }
 .container{
     width: 70%;
@@ -88,8 +160,30 @@ input{
     top:10%;
     box-shadow: 0 0 2.5rem -0.5rem  black;
     text-align: center;
-    font-size: 2rem;
-    background-color: white;
+    font-size: 1.5rem;
+    opacity: 2.0;
+    border:3px solid white;
+    background: #3C3C3C;
+ 
+}
+#demandpopup table th{
+	text-align: center;
+	opacity: 2.0;
+	
+}
+.dtab
+{
+	opacity: 2.0;
+	background-color: #222222;
+}
+#demandpopup table {
+	opacity: 2.0;
+}
+#demandpopup table td tr{
+	text-align: center;
+
+    
+
 }
 
 #send{
@@ -105,7 +199,7 @@ input{
 	margin: 1% 0 0 2.5%;
 }
 #ordertab table{
-	font-size: 2rem;
+	font-size: 1.5rem;
 	line-height: 4.5rem;
 }
 #ordertab td{
@@ -201,11 +295,172 @@ input{
 {
 	bottom:0%;
 }
-#dot
+
+.oval-thought {
+  position:absolute;
+  width:270px;
+  padding:50px 40px;
+  margin:0.5em auto 40px;
+  margin-left:-120px;
+  margin-top:-110px;
+  text-align:center;
+  color:#fff;
+  background:#A79154;
+  /* css3 */
+  background:-webkit-gradient(linear, 0 0, 0 100%, from(#DEC26E), to(#92792D));
+  background:-moz-linear-gradient(#DEC26E, #92792D);
+  background:-o-linear-gradient(#DEC26E, #92792D);
+  background:linear-gradient(#DEC26E, #92792D);
+  /*
+  NOTES:
+  -webkit-border-radius:220px 120px; // produces oval in safari 4 and chrome 4
+  -webkit-border-radius:220px / 120px; // produces oval in chrome 4 (again!) but not supported in safari 4
+  Not correct application of the current spec, therefore, using longhand to avoid future problems with webkit corrects this
+  */
+  -webkit-border-top-left-radius:220px 120px;
+  -webkit-border-top-right-radius:220px 120px;
+  -webkit-border-bottom-right-radius:220px 120px;
+  -webkit-border-bottom-left-radius:220px 120px;
+  -moz-border-radius:220px / 120px;
+  border-radius:220px / 120px;
+}
+
+.oval-thought p {font-size:1.25em;}
+
+
+/*.oval-thought:before {
+  content:"";
+  position:absolute;
+  margin-left:50px;
+  bottom:-40px;
+  left:50px;
+  width:30px;
+  height:30px;
+  background:#A79154;
+  -webkit-border-radius:30px;
+  -moz-border-radius:30px;
+  border-radius:30px;
+}
+
+.oval-thought:after {
+  content:"";
+  position:absolute;
+  margin-left:50px;
+  bottom:-50px;
+  left:30px;
+  width:15px;
+  height:15px;
+  background:#A79154;
+  -webkit-border-radius:15px;
+  -moz-border-radius:15px;
+  border-radius:15px;
+}*/
+
+
+.oval-thought:before {
+  content:"";
+  position:absolute;
+  bottom:-40px;
+  left:100px;
+  width:30px;
+  height:30px;
+  background:#A79154;
+  -webkit-border-radius:30px;
+  -moz-border-radius:30px;
+  border-radius:30px;
+}
+
+.oval-thought:after {
+  content:"";
+  position:absolute;
+  bottom:-50px;
+  left:130px;
+  width:15px;
+  height:15px;
+  background:#A79154;
+  -webkit-border-radius:15px;
+  -moz-border-radius:15px;
+  border-radius:15px;
+}
+
+#loading {
+	position: fixed;
+	left: 0px;
+	top: 0px;
+	width: 100%;
+	height: 100%;
+	z-index: 9999;
+	background: url('/static/images/page-loader.gif') 50% 50% no-repeat rgb(249,249,249);
+}
+
+
+/* ============================================================================================================================
+== BLOCKQUOTE WITH OBTUSE TRIANGLE
+** ============================================================================================================================ */
+#bub {
+	z-index:1000; 
+	position:fixed; 
+	width:20%;
+
+	bottom:15%; 
+	right:1%;
+}
+
+
+.left-arrow
 {
-	position:relative;
-	width:10%;
-	height:10%;
-	background-color: black;
-	z-index: 999;
+	right:0;
+	width:auto;
+}
+.example-obtuse {
+  position:relative;
+  padding:15px 30px;
+  margin:0;
+  color:#000;
+  min-width:40%;
+  min-height:20%;
+  background:#f3961c; /* default background for browsers without gradient support */
+  /* css3 */
+  background:-webkit-gradient(linear, 0 0, 0 100%, from(#f9d835), to(#f3961c));
+  background:-moz-linear-gradient(#f9d835, #f3961c);
+  background:-o-linear-gradient(#f9d835, #f3961c);
+  background:linear-gradient(#f9d835, #f3961c);
+  /* Using longhand to avoid inconsistencies between Safari 4 and Chrome 4 */
+  -webkit-border-top-left-radius:25px 50px;
+  -webkit-border-top-right-radius:25px 50px;
+  -webkit-border-bottom-right-radius:25px 50px;
+  -webkit-border-bottom-left-radius:25px 50px;
+  -moz-border-radius:25px / 50px;
+  border-radius:25px / 50px;
+}
+
+/* display of quote author (alternatively use a class on the element following the blockquote) */
+.example-obtuse + p {margin:10px 150px 2em 0; text-align:right; font-style:italic;}
+
+/* creates the larger triangle */
+.example-obtuse:before {
+  content:"";
+  position:absolute;
+  bottom:-30px;
+  right:80px;
+  border-width:0 0 30px 50px;
+  border-style:solid;
+  border-color:transparent #f3961c;
+  /* reduce the damage in FF3.0 */
+  display:block;
+  width:0;
+}
+
+/* creates the smaller triangle */
+.example-obtuse:after {
+  content:"";
+  position:absolute;
+  bottom:-30px;
+  right:110px;
+  border-width:0 0 30px 20px;
+  border-style:solid;
+  border-color:transparent #222;
+  /* reduce the damage in FF3.0 */
+  display:block;
+  width:0;
 }

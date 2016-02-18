@@ -22,8 +22,16 @@ def moneySupply (fid, units, turn):
 	amount = units * 50
 	moneyIncrease (fid, amount, turn)
 
+def getMoneyForOrder():
+	return 40
+
 def moneyPlaceOrder (fid, units, turn):
-	amount = units * 40
+	amount = units * getMoneyForOrder()
+	print amount
+	moneyDecrease (fid, amount, turn)
+
+def moneyInventory (fid, units, turn):
+	amount = units * 2
 	moneyDecrease (fid, amount, turn)
 
 def moneyUpdate(fid, level, turn):
@@ -32,5 +40,7 @@ def moneyUpdate(fid, level, turn):
 	elif level == 3:
 		moneyDecrease (fid, 5000, turn)
 
-
+def getMoney(fid):
+	fac = factories.objects.get(fid = fid)
+	return fac.money
 

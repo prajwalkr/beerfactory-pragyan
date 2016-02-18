@@ -1,272 +1,626 @@
 {% load staticfiles %}
-<!-- 
-PROBLEMS: 1)confirm order
- -->
 <html ng-app="store">
-<head>
-	<title>The Beer Factory</title>
-	<script type="text/javascript" src="{% static "angular/angular.min.js" %}"> </script>
-	<meta charset="utf-8"/>
-	<link rel="stylesheet" type="text/css" href="{% static "bootstrap-3.3.6-dist/css/bootstrap.min.css" %}" />
-	<link rel="stylesheet" type="text/css" href="{% static "css/left.css" %}" />
+<title>The Beer Factory</title>
 
-	<!-- <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.15/angular-ui-router.js"></script> -->
-	<script src="{% static "js/jquery.min.js" %}"></script>
-	<script src="{% static "js/jquery.imagemapster.js" %}"></script>
+<head> 
+    <script type="text/javascript" src="{% static "angular/angular.min.js" %}"> </script>
+    <meta charset="utf-8"/>
+    <link rel="stylesheet" type="text/css" href="{% static "bootstrap-3.3.6-dist/css/bootstrap.min.css" %}" />
+    <link rel="stylesheet" type="text/css" href="{% static "css/left.css" %}" />
+    <link rel="stylesheet" href="{% static "css/angular-toastr.css" %}" />
+    <script src="{% static "js/jquery.min.js" %}"></script>
+    <script src="{% static "js/jquery.imagemapster.js" %}"></script>
     <script src="{% static "bootstrap-3.3.6-dist/js/bootstrap.min.js" %}"></script>
-
-	
+    <script src="{% static "js/angular-animate.js" %}"></script>
+    <script src="{% static "js/angular-toastr.tpls.js" %}"></script>
+    <script src="{% static "bootstrap-3.3.6-dist/js/bootstrap.min.js" %}"></script>
+    <link rel="stylesheet" type="text/css" href="{% static "css/left.css" %}" />
 </head>
-<body>
-<!--NAVBAR -->
-<nav class="navbar navbar-default navbar-fixed-top nav-container"  ng-controller="StoreController as store">
-  <div class="container-fluid"  ng-repeat="product in store.products">
-    <div class="navbar-header col-md-3">
-      <a class="navbar-brand" href="#">BEER-FACTORY</a>
+
+<body ng-cloak>
+
+
+<div ng-controller = "StoreController as store">
+    <div id="loading">
+
     </div>
-    <ul class="top-info col-md-9">
-    <!-- <ng-repeat="x in product.inventory" ng-hide="$index!==product.inventory.length-1"> -->
-      <li class="col-md-3"> DAY: {$product.inventory[product.inventory.length-1].day$} </li>
-	  <li class="col-md-3"> INVENTORY: {$product.inventory[product.inventory.length-1].no_inv$}</li>
-	  <li class="col-md-3">MONEY: {$ store.factoryDetails.data.factory_1.money $}</li>
-	  <li class="col-md-3">Hi {{name}}</li>
-    </ul>
-  </div>
-</nav>
-<!--END OF NAVBAR-->
 
-<div class="progress">
-  <div id="progressbartop" class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="50"
-  aria-valuemin="0" aria-valuemax="100" style="width:50%; height:2rem;">
-    Stage 1 of 2
-  </div>
+	<nav class="navbar navbar-default navbar-fixed-top nav-container">
+	  	<div class="container-fluid"   ng-repeat="product in store.products">
+	   		<div class="navbar-header col-md-3">
+	   		  <a class="navbar-brand" href="#">BEER-FACTORY</a>
+	   		</div>
+	    		
+	   		<ul class="top-info col-md-9">
+	   		  <li class="col-md-2"> DAY: {$ store.status.data.turn $}/25 </li>
+              <li class="col-md-2"> SCORE: {$ store.factoryDetails.data.factory_1.score $}</li>
+              <li class="col-md-2"> INVENTORY: {$ store.factoryDetails.data.factory_1.inventory $}</li>
+              <li class="col-md-2"> MONEY: {$ store.factoryDetails.data.factory_1.money $}</li>
+	   		  <li id ="stage" class="col-md-2"> STAGE: {$ store.status.data.stage $} </li>
+			  <li class="col-md-2"> Hi {{ name }} </li>	
+	   		</ul>
+		</div>
+	</nav>
+
+
+	<div class="progress">
+	  <div id="progressbartop" class="progress-bar progress-bar-success progress-bar-striped" role="progressbar" aria-valuenow="50"
+	  aria-valuemin="0" aria-valuemax="100" style="width:33%; height:2rem;">
+	    Stage 1 of 3
+	  </div>
+	</div>
+    <div ng-show="store.status.data.stage=='1'" class="stageinfo">SUPPLY TO THE RETAILERS<br>CLICK ON STAGE TO TOGGLE OPEN/CLOSE</div>
+    <div ng-show="store.status.data.stage=='2'" class="stageinfo">PLACE ORDER FOR BEER<br>CLICK ON STAGE TO TOGGLE OPEN/CLOSE</div>
+    <div ng-show="store.status.data.stage=='3'" class="stageinfo">UPGRADE YOUR FACTORY<br>CLICK ON STAGE TO TOGGLE OPEN/CLOSE</div>
+
+	<!-- LEFTTTT -->
+	<div id="main-content">
+		<div id = "map_left">
+			<div style="width:100%;border:0;background-color:black;"> 
+				<img style="width:100%;border:0;" id="map1" src="{% static "images/map1.gif" %}" alt="map1" usemap="#map1">
+			</div>
+		
+			<map name="map1">
+		    	<area alt="" title="fact1" name="fact1" href="#" ng-click="store.mapclicked(-1)"shape="poly" coords="508,558,138,559,132,547,137,539,145,538,144,467,165,467,164,435,172,429,173,278,180,279,180,267,200,266,200,409,210,408,209,236,230,235,232,218,248,218,250,377,264,372,264,391,279,392,280,310,295,295,297,284,319,280,326,280,327,205,333,205,333,191,368,189,368,203,377,204,376,335,396,335,398,347,409,344,412,266,404,266,407,259,413,258,414,243,431,243,432,257,439,258,440,265,432,266,439,342,458,343,465,350,469,363,469,419,494,419,502,427,503,437,504,534,513,540,518,549,516,556" />
+
+		    	 <area alt="" title="fact2" name="fact2" href="#" ng-click="store.mapclicked(-2)" shape="poly" coords="873,502,873,490,879,488,878,428,882,422,896,422,896,388,902,380,910,379,913,336,910,336,910,332,914,330,915,322,925,320,925,330,928,330,929,337,926,338,928,380,932,380,933,376,942,375,942,303,949,302,948,294,964,292,965,301,969,300,970,343,980,344,986,350,986,354,994,360,994,425,998,426,999,394,1008,400,1006,307,1018,306,1018,318,1029,318,1029,414,1033,417,1032,334,1044,335,1044,343,1047,342,1047,429,1050,430,1050,448,1056,447,1055,460,1059,474,1062,490,1068,489,1068,501" />
+
+		    	<area alt="" title="ret1" name="1" href="#" shape="poly" ng-click="store.mapclicked(1)" coords="708,726,709,635,688,635,722,581,810,581,810,555,828,555,827,582,852,582,880,635,860,635,860,725" />
+		    
+		   		<area alt="" title="ret2" name="2" href="#" shape="poly" ng-click="store.mapclicked(2)" coords="123,886,122,804,104,803,135,756,216,757,216,731,231,733,231,757,253,755,280,804,261,805,261,885" />
+
+		    	<area alt="" title="ret3" name="3" href="#" shape="poly" ng-click="store.mapclicked(3)" coords="926,915,926,836,911,836,940,790,1014,792,1014,769,1028,769,1028,790,1048,792,1072,835,1057,837,1058,913" />
+				
+				<div id = "zone2">
+		    		<area alt="" title="ret4" name="4" href="#" shape="poly" ng-click="store.mapclicked(4)" coords="782,1183,782,1097,764,1096,795,1045,879,1045,878,1019,895,1021,896,1045,920,1045,946,1096,927,1097,926,1182" />
+
+		    		<area alt="" title="ret5" name="5" href="#" shape="poly" ng-click="store.mapclicked(5)" coords="378,1250,378,1136,354,1136,392,1069,505,1069,505,1037,526,1036,529,1068,559,1068,594,1136,568,1136,568,1250" />
+
+		    		<area alt="" title="ret6" name="6" href="#" shape="poly" ng-click="store.mapclicked(6)" coords="896,1372,896,1286,877,1287,908,1234,992,1235,993,1209,1008,1209,1009,1234,1034,1236,1060,1284,1041,1286,1040,1370" />
+				</div>
+
+				<div id="zone3">
+		    		<area alt="" title="ret7" name="7" href="#" shape="poly" ng-click="store.mapclicked(7)" coords="286,1727,286,1617,262,1616,301,1552,410,1552,409,1520,430,1519,431,1552,463,1554,495,1616,471,1618,471,1726" />
+
+		    		<area alt="" title="ret8" name="8" href="#" shape="poly" ng-click="store.mapclicked(8)" coords="698,1723,699,1643,682,1644,710,1597,786,1597,788,1572,802,1575,802,1597,823,1598,842,1634,831,1642,824,1656,824,1685,830,1694,830,1723" />
+
+		    		<area alt="" title="ret9" name="9" href="#" shape="poly" ng-click="store.mapclicked(9)" coords="500,2023,500,1937,482,1937,514,1885,597,1885,598,1862,613,1861,614,1886,636,1885,663,1935,645,1937,644,2023" />
+				</div>
+
+				<div id="zone4">
+		    		<area alt="" title="ret10" name="10" href="#" shape="poly" ng-click="store.mapclicked(10)" coords="138,2498,138,2389,114,2389,152,2324,260,2323,260,2292,281,2291,282,2323,309,2325,344,2388,319,2388,318,2496" />
+
+		    		<area alt="" title="ret11" name="11" href="#" shape="poly" ng-click="store.mapclicked(11)" coords="432,2496,431,2477,444,2467,452,2457,458,2435,460,2417,456,2407,450,2397,440,2385,432,2379,432,2359,402,2358,451,2275,589,2277,590,2235,616,2235,616,2277,652,2277,693,2349,682,2349,674,2357,666,2356,665,2371,644,2407,665,2408,663,2497"  />
+
+		    		<area alt="" title="ret12" name="12" href="#" shape="poly" ng-click="store.mapclicked(12)" coords="665,2505,668,2406,646,2406,682,2351,778,2349,776,2319,796,2319,796,2349,823,2348,853,2405,832,2408,832,2505" />
+				</div>
+
+				<div id="zone5">
+		    		<area alt="" title="ret13" name="13" href="#" shape="poly" click="store.mapclicked(13)" coords="494,2902,492,2803,472,2804,508,2744,603,2746,604,2716,624,2714,624,2746,650,2746,680,2803,659,2804,658,2900" />
+
+		    		<area alt="" title="ret14" name="14" href="#" shape="poly" click="store.mapclicked(14)" coords="744,2988,743,2848,710,2848,762,2764,898,2764,898,2724,926,2724,926,2764,963,2764,1008,2848,976,2848,976,2922,962,2932,956,2944,955,2959,954,2972,964,2984,966,2986" />
+
+		    		<area alt="" title="ret15" name="15" href="#" shape="poly" click="store.mapclicked(15)" coords="270,3136,276,3121,276,3100,268,3084,265,3078,266,3052,247,3053,276,3002,354,3004,356,2978,370,2978,372,3001,394,3001,420,3052,402,3052,402,3135" />
+				</div>
+			</map>
+
+			{% load staticfiles %}
+			<script src="{% static "js/jquery.imagemapster.js" %}"></script>
+			<script type="text/javascript" src="{% static "mapp.js" %}"></script>
+		</div>
+  <!--       <div id="man">
+            <div class="msg">
+                <div id="msg1" ng-show="store.factoryDetails.data.factory_1.money>5000 && store.factoryDetails.data.factory_1.money<10000" style="position:absolute;z-index:999;">
+                    Playing Good! Keep it up!
+                </div>
+                <div id="msg2" ng-show="store.factoryDetails.data.factory_1.money>10000" style="position:absolute;z-index:999;">
+                    Excellent Job!
+                </div>
+                 <div id="msg3" ng-show="store.factoryDetails.data.factory_1.money>3000 && store.factoryDetails.data.factory_1.money<5000" style="position:absolute;z-index:999;">
+                   Can do better!
+                </div>
+                <div id="msg4" ng-show="store.factoryDetails.data.factory_1.money<3000" style="position:absolute;z-index:999;">
+                    &nbsp; &nbsp; &nbsp; Uh oh! &nbsp; &nbsp; &nbsp; 
+                </div>
+            </div>
+            <div id="image">
+                <img src="{% static "images/hp.gif" %}" style="position:absolute;z-index:999;">
+            </div>
+        </div> -->
+
+
+
+        <div id="right_half">
+            <div ng-show="store.status.data.stage=='1'||store.status.data.stage=='0'">
+                <ul id="demandtabs" class="nav nav-tabs" role="tablist">
+                    <li class="active">
+                        <a href="#demandtab" role="tab" data-toggle="tab"> DEMAND </a>
+                    </li>
+                    <li>
+                    <a href="#history1tab" role="tab" data-toggle="tab"> HISTORY </a>
+                    </li>
+                </ul>
+                <div class="tab-content">
+                    <div id="demandtab" class="tab-pane fade in active" style="opacity:0.99;">
+                        <div id="selections" class="rightcontent">
+                            <div class="well" ng-hide="store.e>0"><center>CLICK ON A RETAILER OR FACTORY TO SEE THE DEMAND</center></div>
+
+                            <div class="jumbotron">
+                                <div ng-show="store.e>0 && store.e<=store.map.check1">
+                                    
+                                    <div class="row">
+                                        <div class="col-md-3 col-md-offset-2"> RETAILER NAME:</div> <div class="col-md-6"> {$ store.mapDetails.data.rcode[store.e-1] $} </div> 
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-3 col-md-offset-2"> STORY: </div> <div class="col-md-6"> </div> 
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-3 col-md-offset-2">
+                                            POPULARITY: 
+                                        </div>
+                                        <div class="col-md-6"> 
+                                            <div class='progress-bar progress-bar-success progress-bar-striped' role='progressbar' aria-valuenow='50' aria-valuemin='0' aria-valuemax='100' ng-style="{width: (store.getPopPercent(store.mapDetails.data.popularity[store.e-1])+'%')}" style="height: 2rem"> {$ Math.floor(store.mapDetails.data.popularity[store.e-1]*50) $} %
+                                            </div> 
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-3 col-md-offset-2"> DEMAND: </div> <div class="col-md-6"> {$ store.products[0].orders[store.e-1].order_no $} </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-3 col-md-offset-2"> SUPPLIED: </div> <div class="col-md-6"> <input id="tono" type="number" ng-model="store.products[0].orders[store.e-1].to_no"> </input> </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-3 col-md-offset-2">
+                                            <button class='btn btn-default' ng-click='store.confirmorder(store.e)'> CONFIRM </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div ng-show="store.e>store.map.check1">
+                                    <div class="row">
+                                        <div class="col-md-3 col-md-offset-2"> RETAILER {$ store.mapDetails.data.rcode[store.e-1] $} NOT UNLOCKED YET! </div>
+                                        <br>
+                                        <div class="col-md-3 col-md-offset-2"> KEEP PLAYING TO UNLOCK THEM! </div>
+                                    </div>
+
+                                </div>
+
+                                <div ng-show="store.e==-1">
+                                    <div class="row"> 
+                                        <div class="col-md-3 col-md-offset-2"> YOUR FACTORY'S NAME : </div>
+                                    </div>
+                                    <div class="row"> 
+                                        <div class="col-md-3 col-md-offset-2"> FACTORY STORY : </div>
+                                    </div>
+                                    <div class="row"> 
+                                        <div class="col-md-3 col-md-offset-2"> FACTORY DETAILS : </div>
+                                    </div>
+                                </div>
+
+                                <div ng-show="store.e==-2">
+                                    <div class="row"> 
+                                        <div class="col-md-3 col-md-offset-2"> OPPONENT FACTORY'S NAME : </div>
+                                    </div>
+                                    <div class="row"> 
+                                        <div class="col-md-3 col-md-offset-2"> OPPONENT FACTORY STORY : </div>
+                                    </div>
+                                    <div class="row"> 
+                                        <div class="col-md-3 col-md-offset-2"> OPPONENT FACTORY DETAILS : </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div id="cashinfo">
+                            YOU ARE YET TO SUPPLY TO:  &nbsp; &nbsp;
+                            <span ng-repeat="retailer in store.retailersRemaining track by $index">
+                                    {$ retailer $}
+
+                                    &nbsp;&nbsp;
+                            </span>
+                            <br>
+                            <span>
+                                Amount of beer remaining: {$ store.remaining  $}
+                            </span>
+                            <br>
+                            <span>
+                                Expected profit: {$ store.profit $}
+                            </span>
+                        </div>
+                        <div id="demandpopup">
+                            <div class="close" ng-click="store.closepopup()">close</div>
+                                <table class="dtab table table-striped" style="width:100%;"> 
+                                    <thead>
+                                        <tr> 
+                                            <th> RETAILER </th>
+                                            <th> ORDER <br> AMOUNT </th>
+                                            <th> AMOUNT TO <br> DELIVER </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="order in store.products[0].orders|limitTo:(Math.floor((store.status.data.turn-1)/5)+1)*3 track by $index">
+                                            <td class="col-md-3"> {$order.from$}</td>
+                                            <td class="col-md-3"> {$order.order_no$}</td>
+                                            <td class="col-md-3"> {$order.to_no$} </td>
+                                            <!-- <td>{$(Math.floor((store.status.data.turn-1)/5-1)+1)*3$}</td> -->
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <button id="send" class="btn btn-default" value = "Send" ng-click="store.send()">SEND</button> 
+                        </div>
+                        <button id="getdemand" class = "btn btn-default" value = "Get Demand" ng-click = "store.getDemand()">SHOW DEMAND</button>
+                    </div>
+
+                    <div id = "history1tab" class="tab-pane fade">
+                        <table class="table table-striped table-bordered"> 
+                            <thead>
+                                <tr> 
+                                    <th> <center> DAY </center> </th>
+                                    <th> <center> DETAILS </center> </th>
+                                    <th> <center> ORDERS </center> </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="(key,day) in store.history track by $index">
+                                    <td class="col-md-3"> <center> {$ key $} </center> </td>
+                                    <td class="col-md-3"> 
+                                        <table class="table table-striped table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th> <center>RETAILER </center></th>
+                                                    <th> <center>DEMANDS </center></th>
+                                                    <th> <center>SUPPLIED </center></th>
+                                                </tr>
+                                            </thead>
+
+                                            <tbody>
+                                                <tr ng-repeat="demand in day.demand track by $index">
+                                                    <td class="col-md-3"><center> R{$ $index+1 $} </center></td>
+                                                    <td class="col-md-3"><center> {$ demand $} </center></td>
+                                                    <td class="col-md-3"><center> {$ day.supply[$index] $} </center></td>
+                                                </tr>
+                                            </tbody>
+
+                                        </table>
+                                    </td>
+                                    <td class="col-md-3"> <center> {$ day.order $} </center> </td>
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div> 
+
+                </div>
+            </div>
+
+            <!-- stage 2 placing order stage-->
+            <div ng-show="store.status.data.stage=='2'">
+                <ul id="ordertabs" class="nav nav-tabs" role="tablist">
+                    <li class="active">
+                        <a href="#ordertab" role="tab" data-toggle="tab"> PRODUCE </a>
+                    </li>
+                    <li>
+                    <a href="#history2tab" role="tab" data-toggle="tab"> HISTORY </a>
+                    </li>
+                </ul>
+
+                <div class="tab-content">
+                    <div id="ordertab" class="tab-pane fade in active">
+                        <table>
+                            <tr>
+                                <td>  Amount in Inventory </td>
+                                <td> {$ store.factoryDetails.data.factory_1.inventory $} </td>
+                            </tr> 
+                            <tr>
+                                <td>MONEY</td>
+                                <td><span id="money">{$ store.factoryDetails.data.factory_1.money $}</span></td>
+                            </tr>
+                            <tr>
+                                <td>PRODUCTION CAPACITY</td>
+                                <td id="cur_capacity">{$ store.factoryDetails.data.factory_1.capacity $}</td>
+                            </tr>
+                            <tr>
+                                <td>PRICE PER UNIT</td>
+                                <td>40</td>
+                            </tr>
+                            <tr>
+                                <td>AMOUNT TO BE PRODUCED</td>
+                                <td><input id='ordertext' type="number" placeholder="Place the order for the next round here!" ng-model="store.order">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>&nbsp;</td>
+                                <td><span id='price'>Order amount: 0</span></td>
+                            </tr>
+                            <tr>
+                                <td><button class="btn btn-default" ng-click="store.placeOrder()">ORDER!</button>  </td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div id = "history2tab" class="tab-pane fade">
+                        <table class="table table-striped table-bordered"> 
+                            <thead>
+                                <tr> 
+                                    <th> <center> DAY </center> </th>
+                                    <th> <center> DETAILS </center> </th>
+                                    <th> <center> ORDERS </center> </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="(key,day) in store.history track by $index">
+                                    <td class="col-md-3"> <center> {$ key $} </center> </td>
+                                    <td class="col-md-3"> 
+                                        <table class="table table-striped table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th> <center>RETAILER </center></th>
+                                                    <th> <center>DEMANDS </center></th>
+                                                    <th> <center>SUPPLIED </center></th>
+                                                </tr>
+                                            </thead>
+
+                                            <tbody>
+                                                <tr ng-repeat="demand in day.demand track by $index">
+                                                    <td class="col-md-3"><center> R{$ $index+1 $} </center></td>
+                                                    <td class="col-md-3"><center> {$ demand $} </center></td>
+                                                    <td class="col-md-3"><center> {$ day.supply[$index] $} </center></td>
+                                                </tr>
+                                            </tbody>
+
+                                        </table>
+                                    </td>
+                                    <td class="col-md-3"> <center> {$ day.order $} </center> </td>
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>  
+                </div>
+            </div>
+
+            <!-- stage 3 option to upgrade factory stage-->
+            <div ng-show="store.status.data.stage=='3'">
+                <ul id="upgradetabs" class="nav nav-tabs nav-justified" role="tablist">
+                    <li class="active">
+                        <a href="#upgradetab" role="tab" data-toggle="tab"> UPGRADE FACTORY </a>
+                    </li>
+                    <li>
+                    <a href="#history3tab" role="tab" data-toggle="tab"> HISTORY </a>
+                    </li>
+                </ul>
+                <div class="tab-content">
+                    <div id="upgradetab" class="tab-pane fade in active">
+                        
+                        <div class="jumbotron">
+                            <div class="row">
+                                <div class="col-md-6 col-md-offset-2">Cost for next upgrade: </div> <div class="col-md-3"> {$ store.factoryDetails.data.factory_1.upgrade_cost $}</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 col-md-offset-2"> Current Capacity:  </div> <div class="col-md-3">{$ store.factoryDetails.data.factory_1.capacity $}</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 col-md-offset-2"> Capacity if upgraded:  </div> <div class="col-md-3"> {$ store.factoryDetails.data.factory_1.next_upgrade_capacity $}</div>
+                            </div>
+
+                            <br>
+        
+                            <div ng-if="store.factoryDetails.data.factory_1.upgrade_cost < store.factoryDetails.data.factory_1.money && store.factoryDetails.data.factory_1.upgrade_cost!=0">
+                                <h3><center> Do you want to upgrade your factory? </center></h3>
+                                <button type="button" class="btn btn-primary" style="position: relative; left: 150px;" ng-click="store.upgradeFactory(1)"> Yes! </button>
+                                <button type="button" class="btn btn-primary" style="position: relative; left: 250px;" ng-click="store.upgradeFactory(0)"> No thanks! </button>
+                            </div>
+
+                            <div ng-if="store.factoryDetails.data.factory_1.upgrade_cost > store.factoryDetails.data.factory_1.money">
+                                <h4><center> You do not have enough cash to update your factory  </center></h4>  
+                                <br>
+                                <button type="button" class="btn btn-primary" style="position: relative; left: 400px;" ng-click="store.upgradeFactory(0)"> Go on! </button>
+                            </div>    
+
+                            <div ng-if="store.factoryDetails.data.factory_1.next_upgrade_capacity==0">
+                                <h4><center> You can no longer update your factory </center> </h4>
+                                <br>
+                                <button type="button" class="btn btn-primary" style="position: relative; left: 400px;" ng-click="store.upgradeFactory(0)"> Go on! </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id = "history3tab" class="tab-pane fade">
+                        <table class="table table-striped table-bordered"> 
+                            <thead>
+                                <tr> 
+                                    <th> <center> DAY </center> </th>
+                                    <th> <center> DETAILS </center> </th>
+                                    <th> <center> ORDERS </center> </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="(key,day) in store.history track by $index">
+                                    <td class="col-md-3"> <center> {$ key $} </center> </td>
+                                    <td class="col-md-3"> 
+                                        <table class="table table-striped table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th> <center>RETAILER </center></th>
+                                                    <th> <center>DEMANDS </center></th>
+                                                    <th> <center>SUPPLIED </center></th>
+                                                </tr>
+                                            </thead>
+
+                                            <tbody>
+                                                <tr ng-repeat="demand in day.demand track by $index">
+                                                    <td class="col-md-3"><center> R{$ $index+1 $} </center></td>
+                                                    <td class="col-md-3"><center> {$ demand $} </center></td>
+                                                    <td class="col-md-3"><center> {$ l.supply[$index] $} </center></td>
+                                                </tr>
+                                            </tbody>
+
+                                        </table>
+                                    </td>
+                                    <td class="col-md-3"> <center> {$ day.order $} </center> </td>
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div> 
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
 </div>
-
-<!-- LEFTTTT -->
-<div id="main-content" ng-controller="StoreController as store">
-
-
-<div id = "map_left">
-
-<div style="width:100%;border:0;background-color:black;"> 
-<!-- <div style="clear: both; width: 500px; height: 50px; border: 1px solid blackth;" id="selections"></div> -->
-<img style="width:100%;border:0;" id="map1" src="{% static "images/map1.gif" %}" alt="map1" usemap="#map1">
+<div ng-hide="store.instructor.bubble" id="bub" style="">
+<div ng-bind-html-unsafe="html" class="example-obtuse">
+    <div class="main">
+    {$ store.instructor.tobedisplayed $}
+    </div>
+    <center>
+    <br>
+    {$ store.instructor.counter+1 $}/{$ store.instructor.len $}<br>
+    <button class="newer" ng-click="store.nextInstruction()"><</button>
+    <button class="older" ng-click="store.prevInstruction()">></button>
+    </center>
 </div>
-<map name="map1">
-    <area alt="" title="fact1" name="fact1" href="#" ng-click="store.mapclicked(-1)" shape="poly" coords="508,558,138,559,132,547,137,539,145,538,144,467,165,467,164,435,172,429,173,278,180,279,180,267,200,266,200,409,210,408,209,236,230,235,232,218,248,218,250,377,264,372,264,391,279,392,280,310,295,295,297,284,319,280,326,280,327,205,333,205,333,191,368,189,368,203,377,204,376,335,396,335,398,347,409,344,412,266,404,266,407,259,413,258,414,243,431,243,432,257,439,258,440,265,432,266,439,342,458,343,465,350,469,363,469,419,494,419,502,427,503,437,504,534,513,540,518,549,516,556" />
-
-    <area alt="" title="fact2" name="fact2" href="#" shape="poly" coords=" " ng-click="store.mapclicked(-2)" />
-<div id = "zone1">
-    <area alt="" title="ret1" name="1" href="#" ng-click="store.mapclicked(1)" shape="poly" coords="708,726,709,635,688,635,722,581,810,581,810,555,828,555,827,582,852,582,880,635,860,635,860,725" />
-    
-    <area alt="" title="ret2" name="2" href="#" ng-click="store.mapclicked(2)" shape="poly" coords="123,886,122,804,104,803,135,756,216,757,216,731,231,733,231,757,253,755,280,804,261,805,261,885" />
-
-    <area alt="" title="ret3" name="3" href="#" ng-click="store.mapclicked(3)" shape="poly" coords="926,915,926,836,911,836,940,790,1014,792,1014,769,1028,769,1028,790,1048,792,1072,835,1057,837,1058,913" />
 </div>
-<div id = "zone2">
-    <area alt="" title="ret4" name="4" href="#" ng-click="store.mapclicked(4)" shape="poly" coords="782,1183,782,1097,764,1096,795,1045,879,1045,878,1019,895,1021,896,1045,920,1045,946,1096,927,1097,926,1182" />
-
-    <area alt="" title="ret5" name="5" href="#" ng-click="store.mapclicked(5)" shape="poly" coords="378,1250,378,1136,354,1136,392,1069,505,1069,505,1037,526,1036,529,1068,559,1068,594,1136,568,1136,568,1250" />
-
-    <area alt="" title="ret6" name="6" href="#" ng-click="store.mapclicked(6)" shape="poly" coords="896,1372,896,1286,877,1287,908,1234,992,1235,993,1209,1008,1209,1009,1234,1034,1236,1060,1284,1041,1286,1040,1370" />
+<div ng-click="store.closeInstructor()" id="movable" style="z-index:1000; width:10%; position:fixed; bottom:-20%; right:1%;margin-right:1%">
+<img src="{% static  "genius.svg" %}" width="150px">
 </div>
-<div id="zone3">
-    <area alt="" title="ret7" name="7" href="#" ng-click="store.mapclicked(7)" shape="poly" coords="286,1727,286,1617,262,1616,301,1552,410,1552,409,1520,430,1519,431,1552,463,1554,495,1616,471,1618,471,1726" />
+<script>
+// script to feed in ids and necessary urls to app.js
 
-    <area alt="" title="ret8" name="8" href="#" ng-click="store.mapclicked(8)" shape="poly" coords="698,1723,699,1643,682,1644,710,1597,786,1597,788,1572,802,1575,802,1597,823,1598,842,1634,831,1642,824,1656,824,1685,830,1694,830,1723" />
-
-    <area alt="" title="ret9" name="9" href="#" ng-click="store.mapclicked(9)" shape="poly" coords="500,2023,500,1937,482,1937,514,1885,597,1885,598,1862,613,1861,614,1886,636,1885,663,1935,645,1937,644,2023" />
-</div>
-<div id="zone4">
-    <area alt="" title="ret10" name="10" href="#" ng-click="store.mapclicked(10)" shape="poly" coords="138,2498,138,2389,114,2389,152,2324,260,2323,260,2292,281,2291,282,2323,309,2325,344,2388,319,2388,318,2496" />
-
-    <area alt="" title="ret11" name="11" href="#" ng-click="store.mapclicked(11)" shape="poly" coords="432,2496,431,2477,444,2467,452,2457,458,2435,460,2417,456,2407,450,2397,440,2385,432,2379,432,2359,402,2358,451,2275,589,2277,590,2235,616,2235,616,2277,652,2277,693,2349,682,2349,674,2357,666,2356,665,2371,644,2407,665,2408,663,2497"  />
-
-    <area alt="" title="ret12" name="12" href="#" ng-click="store.mapclicked(12)" shape="poly" coords="665,2505,668,2406,646,2406,682,2351,778,2349,776,2319,796,2319,796,2349,823,2348,853,2405,832,2408,832,2505" />
-</div>
-<div id="zone5">
-    <area alt="" title="ret13" name="13" href="#" ng-click="store.mapclicked(13)" shape="poly" coords="494,2902,492,2803,472,2804,508,2744,603,2746,604,2716,624,2714,624,2746,650,2746,680,2803,659,2804,658,2900" />
-
-    <area alt="" title="ret14" name="14" href="#" ng-click="store.mapclicked(14)" shape="poly" coords="744,2988,743,2848,710,2848,762,2764,898,2764,898,2724,926,2724,926,2764,963,2764,1008,2848,976,2848,976,2922,962,2932,956,2944,955,2959,954,2972,964,2984,966,2986" />
-
-    <area alt="" title="ret15" name="15" href="#" ng-click="store.mapclicked(15)" shape="poly" coords="270,3136,276,3121,276,3100,268,3084,265,3078,266,3052,247,3053,276,3002,354,3004,356,2978,370,2978,372,3001,394,3001,420,3052,402,3052,402,3135" />
-</div>
-</map>
-
-{% load staticfiles %}
-<script src="{% static "js/jquery.imagemapster.js" %}"></script>
-<script type="text/javascript" src="{% static "mapp.js" %}"></script>
-</div>
-<script type="text/javascript">
-var i1 = document.getElementById("i1");
-var f1 = document.getElementById("f1");
-function fact1()
-{
-	i1.style.display="inline-block";
-	
-}
-function unfact1()
-{
-	i1.style.display="none";
-	
-}
-function fact2()
-{
-	i2.style.display="inline-block";
-	
-}
-function unfact2()
-{
-	i2.style.display="none";
-	
-}
 var id = "{{request.session.user_id}}";
 console.log('user id is', id);
+
 var factoryDetailsUrl = "{% url 'fac_details' %}";
 console.log('url is', factoryDetailsUrl);
+
 var getStatusUrl = "{% url 'getStatus' %}";
 console.log('getStatusUrl is', getStatusUrl);
+
 var getDemandUrl = "{% url 'get_demand' %}";
 console.log('getDemandUrl is', getDemandUrl);
+
 var viewDemandUrl = "{% url 'viewDemand' %}";
 console.log('viewDemandUrl is', viewDemandUrl);
+
 var supplyUrl = "{% url 'supply' %}";
 console.log('supplyUrl is', supplyUrl);
+
 var placeOrderUrl = "{% url 'placeOrder' %}";
-console.log('placeOrderUrl is', placeOrderUrl	);
+console.log('placeOrderUrl is', placeOrderUrl   );
+
 var mapUrl = "{% url 'map' %}";
 console.log('mapUrl is', mapUrl );
+
+var updateCapacityUrl = "{% url 'updateCapacity' %}";
+console.log('updateCapacityUrl is', updateCapacityUrl );
+
+var historyUrl = "{% url 'history' %}";
+console.log('historyUrl is', historyUrl );
+
+var stageclickcount=0;
+
+$('#ordertext').keyup(function(){
+    var x = this.value;
+    var rem = parseInt($("#money").html()) - (x*40);
+    var cur_cap = parseInt($("#cur_capacity").html());
+    console.log("REM: ", rem);
+    if(x>=0)
+        if(x<=cur_cap)
+            if(rem>=0)
+                $("#price").html("Order amount: "+(x*40)+"<br>Money left: "+rem);
+            else
+                $("#price").html("Not enough cash!");
+        else
+            $("#price").html("Exceeded capacity!");
+    else
+        $("#price").html("Invalid amount entered!");
+});
+$(document).ready(function(){
+$("#stage").click(function() {
+    stageclickcount=!stageclickcount;
+    console.log("STAGEEEEEE", stageclickcount);
+    if(stageclickcount!=0)
+        $(".stageinfo").css("display","none");
+    else
+        $(".stageinfo").css("display","block");
+});
+});
+
+$(window).load(function() {
+    $("#loading").fadeOut("slow");
+});
+
+
 </script>
 
-<div id="right_half">
-    <!-- <div ng-show="store.status.data.stage=='1'||store.status.data.stage=='0'||store.status.data.stage=='2'"> -->
-    <div ng-show="store.status.data.stage=='1'||store.status.data.stage=='0'">
+    <script type="text/javascript" src="{% static "app.js" %}"> </script>
+    <script>
+    (function($) {
+    $.fn.drags = function(opt) {
 
-      <ul id="demandtabs" class="nav nav-tabs" role="tablist">
-      <li class="active">
-          <a href="#demandtab" role="tab" data-toggle="tab"> DEMAND
-          </a>
-      </li>
-      <li><a href="#historytab" role="tab" data-toggle="tab"> HISTORY
-          </a>
-      </li>
-    </ul>
-        <!-- <button class = "btn btn-default" value = "Get Demand" ng-click = "store.getDemand()" onclick="getDemand()">GET DEMAND</button> -->
-        <!-- <button ui-sref="stage1">Click here!</button> -->
-<div class="tab-content">
-            <div id="demandtab" class="tab-pane fade active in">
-        <div id="selections" class="rightcontent">
+        opt = $.extend({handle:"",cursor:"move"}, opt);
 
-            CLICK ON A RETAILER OR FACTORY TO SEE THE DEMAND
-             </div>
-<div id="demandpopup">
-    <div class="close" ng-click="store.closepopup()">close</div>
-    <table class="table table-striped" style="width:100%"> 
-        <thead>
-            <tr> 
-                <th> RETAILER </th>
-                <th> ORDER <br> AMOUNT </th>
-                <th> AMOUNT TO <br> DELIVER </th>
-                </tr>
-        </thead>
-        <tbody>
-            <tr ng-repeat="order in store.products[0].orders track by $index">
-                <td class="col-md-3"> {$order.from$}</td>
-                <td class="col-md-3"> {$order.order_no$}</td>
-                <td class="col-md-3"> <input type="number" min="0" max="{$order.order_no$}" class="form-control" ng-model="order.to_no" class="col-sm-12">  </input></td>
-            </tr>
-        </tbody>
-    </table>
-    <button id="send" class="btn btn-default" value = "Send" ng-click="store.send()">SEND</button> 
-</div>
-        <button id="getdemand" class = "btn btn-default" value = "Get Demand" ng-click = "store.getDemand()">SHOW DEMAND</button>
-</div>
-<div id = "historytab" class="tab-pane fade">
-     <table class="table table-striped"> <thead>
-                    <tr> 
-                        <th> DAY </th>
-                        <th> PRODUCED <br> AMOUNT </th>
-                        <th> AMOUNT<br> SOLD </th>
-                        <th> INVENTORY </th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr ng-repeat="inv in store.products[0].inventory">
-                        <td> {$inv.day$}</td>
-                        <td> {$inv.no_produced$}</td>
-                        <td> {$inv.no_sold$}</td>
-                        <td> {$inv.no_inv$}</td>
-                    </tr>
-                    </tbody>
-                </table>
-</div> 
-</div>
-     </div>
-<div ng-show="store.status.data.stage=='2'">
-    <ul id="ordertabs" class="nav nav-tabs" role="tablist">
-      <li class="active">
-          <a href="#ordertab" role="tab" data-toggle="tab"> ORDER
-          </a>
-      </li>
-      <li><a href="#historytab" role="tab" data-toggle="tab"> HISTORY
-          </a>
-      </li>
-    </ul>
-<div class="tab-content">
-            <div id="ordertab" class="tab-pane fade active in">
-                <table>
-                    <tr>
-                        <td>
-                            AMOUNT IN INVENTORY
-                        </td>
-                        <td>
-                            {$ store.factoryDetails.data.factory_1.inventory $} 
-                        </td>
-                    </tr> 
-                    <tr>
-                        <td>MONEY</td>
-                        <td>{$ store.factoryDetails.data.factory_1.money $}</td>
-                    </tr>
-                    <tr>
-                        <td>PRICE PER UNIT</td>
-                        <td>100</td>
-                    </tr>
-                    <tr>
-                        <td>TOTAL DEMAND LAST TURN</td>
-                        <td>450</td>
-                    </tr>
-                    <tr>
-                        <td>AMOUNT TO BE ORDERED</td>
-                        <td><input type="text" placeholder="Place the order for the next round here!" ng-model="store.order"></td>
-                    </tr>
-                    <tr>
-                        <td><button class="btn btn-default" ng-click="store.placeOrder()">ORDER!</button>  </td>
-                    </tr>
-                </table>
-            </div>
-<div id = "historytab" class="tab-pane fade">
-     <table class="table table-striped"> <thead>
-                    <tr> 
-                        <th> DAY </th>
-                        <th> PRODUCED <br> AMOUNT </th>
-                        <th> AMOUNT<br> SOLD </th>
-                        <th> INVENTORY </th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr ng-repeat="inv in store.products[0].inventory">
-                        <td> {$inv.day$}</td>
-                        <td> {$inv.no_produced$}</td>
-                        <td> {$inv.no_sold$}</td>
-                        <td> {$inv.no_inv$}</td>
-                    </tr>
-                    </tbody>
-                </table>
-</div> 
-</div>
-</div>
-</div>
-</div>
-<script type="text/javascript" src="{% static "app.js" %}"> </script>
+        if(opt.handle === "") {
+            var $el = this;
+        } else {
+            var $el = this.find(opt.handle);
+        }
+
+        return $el.css('cursor', opt.cursor).on("mousedown", function(e) {
+            if(opt.handle === "") {
+                var $drag = $(this).addClass('draggable');
+                var $drag1 = $("#bub").addClass('draggable');
+                $("#bub").css('bottom', '14%');
+            } else {
+                var $drag = $(this).addClass('active-handle').parent().addClass('draggable');
+                var $drag1 = $("#bub").addClass('active-handle').parent().addClass('draggable');
+                $("#bub").css('bottom', '14%');
+            }
+            var z_idx = $drag.css('z-index'),
+                drg_h = $drag.outerHeight(),
+                drg_w = $drag.outerWidth(),
+                pos_y = $drag.offset().top + drg_h - e.pageY,
+                pos_x = $drag.offset().left + drg_w - e.pageX;
+            var z_idx1 = $drag1.css('z-index'),
+                drg_h1 = $drag1.outerHeight(),
+                drg_w1 = $drag1.outerWidth();
+                pos_y1 = $drag1.offset().top + drg_h1 - e.pageY,
+                pos_x1 = $drag1.offset().left + drg_w1 - e.pageX;
+
+            $drag.css('z-index', 1000).parents().on("mousemove", function(e) {
+                $('.draggable').offset({
+                    top:e.pageY + pos_y - drg_h,
+                    left:e.pageX + pos_x - drg_w
+                }).on("mouseup", function() {
+                    $(this).removeClass('draggable').css('z-index', z_idx);
+                    $("#bub").removeClass('draggable').css('z-index', z_idx);
+                });
+            });
+           
+            e.preventDefault(); // disable selection
+        }).on("mouseup", function() {
+            if(opt.handle === "") {
+                $(this).removeClass('draggable');
+            } else {
+                $(this).removeClass('active-handle').parent().removeClass('draggable');
+            }
+        });
+
+    }
+})(jQuery);
+//$('#movable').drags();
+</script>
+
 </body>
 </html>

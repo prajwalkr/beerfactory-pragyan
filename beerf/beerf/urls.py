@@ -19,27 +19,36 @@ from beerf_15 import views
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^register/$',views.register, name="register"),
-    url(r'^login$', views.login, name="login"),
+    # url(r'^register/$',views.register, name="register"),
+    url(r'^usethistologin$', views.login, name="login"),
+    url(r'^$', views.locked, name="locked"),
     url(r'^home$', views.home, name="home"),
     url(r'^assign_factory$', views.assign, name="assign_factory"),
     url(r'^logout$', views.logout, name="logout"),
-    url(r'^testhome$', views.testhome, name="testhome"),
+    url(r'^demo$', views.testhome, name="testhome"),
     url(r'^mapp$', views.mapp, name="mapp"),
     url(r'^getStatus$', views.getStatus, name="getStatus"),
     url(r'^fac_details$', views.fac_details, name="fac_details"),
     url(r'^getSellingPrice$', views.get_selling_price, name="get_selling_price"),
-
+    url(r'^instructions$',views.instructions,name="instructions"),
     url(r'^getDemand$', views.get_demand, name="get_demand"),
     url(r'^map$', views.map, name="map"),
     url(r'^supply$', views.supply, name="supply"),
     url(r'^testmap$', views.testmap, name="testmap"),
     url(r'^updateSellingPrice$', views.updateSellingPrice, name="updateSellingPrice"),
-    url(r'^updateValues$', views.updateValues, name="updateValues"),
+    url(r'^updateCapacity$', views.updateCapacity, name="updateCapacity"),
+    # url(r'^getCapacityDetails$', views.getCapacityDetails, name="getCapacityDetails"),
     url(r'^placeOrder$', views.placeOrder,name='placeOrder'),
     url(r'^viewDemand$', views.viewDemand, name='viewDemand'),
     url(r'^viewDemandSupply$', views.viewDemandSupply, name='viewDemandSupply'),
     url(r'^getPopularity$', views.getPopularity, name='getPopularity'),
     url(r'^restart$',views.restart, name='restart'),
     url(r'^history$',views.history, name='history'),
+    url(r'^graph$',views.graph, name='graph'),
+    url(r'^graph_back$',views.graph_back, name='graph_back'),
+    url(r'^graph_opp_back$',views.graph_opp_back, name='graph_opp_back'),
+    url(r'^review$',views.review, name='review')
+    # url(r'^getScore$',views.getScore, name='getScore'),
+    # url(r'^getTotalScore$',views.getTotalScore, name='getTotalScore')
 ]
+

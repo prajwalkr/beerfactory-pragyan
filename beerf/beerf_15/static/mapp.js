@@ -1,5 +1,6 @@
 var path='static/images/map1.gif' ;
-
+   //var $element = $('#main-content');
+     //       var scope = angular.element($element).scope();
 
 
 
@@ -131,50 +132,28 @@ singleSelect: false,
         isSelectable: false,
         fillOpacity: 1,
         render_select : { altImage : 'black'},
-        areas: [
-                {
-
-                    key: 'fact1',
-                    render_select : { altImage : path},
-                    toolTip: "FACTORY 1"
-                    
-                    
-               },
-               {
-
-                    key: 'fact2',
-                    render_select : { altImage : path},
-                    toolTip: "FACTORY 2"
-                    
-               },
-               {
-                    key:'1',
-                    render_select : {altImage:'color'}
-               },
-               {
-                    key: '2',
-                    render_select : {altImage : 'color'}
-               },
-               {
-                    key: '3',
-                    render_select : {altImage : 'color'}
-               }],    
-        onMouseover: function(x) {
-            if(x.key<4){
+           
+    onMouseover: function(x) {
+            
         var $element = $('#main-content');
         var scope = angular.element($element).scope();
         var ret = scope.store.products[0].orders[x.key-1];
+        var name = scope.store.mapDetails.data.rcode[x.key-1];
         var stage = scope.store.status.data.stage;
+        if(x.key<=(Math.floor((scope.store.status.data.turn-1)/5)+1)*3){
         if(stage==0||stage==1)
-            hovered = ret.name+"<br>POPULARITY<br>DEMAND:"+ret.order_no;
+            hovered = name+"<br>POPULARITY<br>DEMAND:"+ret.order_no;
         else
-            hovered = "DEMAND STAGE";
+            hovered = name+"<br>DEMAND STAGE";
         }
         else if(x.key<15){
-            if(stage==0||stage==1)
-                hovered = "KEEP PLAYING TO UNLOCK!"
-            else
-                hovered = "DEMAND STAGE";
+            var $element = $('#main-content');
+        var scope = angular.element($element).scope();
+            var name = scope.store.mapDetails.data.rcode[x.key-1];
+            //if(stage==0||stage==1)
+                hovered = name+"<br>KEEP PLAYING TO UNLOCK!"
+            //else
+                //hovered = name+"<br>DEMAND STAGE";
             }
         else if(x.key=='fact1'){
             hovered = "FACTORY 1";
@@ -192,7 +171,34 @@ singleSelect: false,
         },
         showToolTip: true,
         toolTipClose: ["tooltip-click", "area-click"],
-});
+        areas: (function() {
+            // var $element = $('#main-content');
+            // var scope = angular.element($element).scope();
+            // console.log("areas",scope)
+            // var c=(Math.floor((scope.store.status.data.turn-1)/5)+1)*3;
+            var myArray = [];
+            myArray.push({
+                key: 'fact1',
+                render_select : { altImage : path},
+                toolTip: "YOUR FACTORY"
+            });
+            myArray.push({
+                key: 'fact2',
+                render_select : { altImage : path},
+                toolTip: "OPPONENT FACTORY"
+            })
+            for(var i=1;i<=3;i++)
+            {
+                myArray.push({
+                   key: ''+i,
+                   render_select : { altImage : path}
+                });
+            }
+            return myArray;
+        })()
+
+    });
+    
 
 
 }

@@ -18,6 +18,9 @@ class factories(models.Model):
 @python_2_unicode_compatible
 class users(models.Model):
 	pid = models.AutoField(primary_key=True)
+	prag_userid = models.IntegerField(default = 0)
+	prag_username = models.CharField(max_length=200, blank=True, default='')
+	prag_fullname = models.CharField(max_length=200, blank=True, default ='')
 	name = models.CharField(max_length=150)
 	email = models.EmailField()
 	factory = models.ForeignKey(factories, null=True)
@@ -32,7 +35,7 @@ class status(models.Model):
 @python_2_unicode_compatible
 class retailers(models.Model):
 	rid = models.AutoField(primary_key=True)
-	rcode = models.CharField(max_length=100, blank=True, unique=True, default = uuid.uuid4)
+	rcode = models.CharField(max_length=100, blank=True)
 	zone = models.IntegerField(null=True)
 	unlocked = models.IntegerField(default=0)
 	details = models.CharField(max_length=500, blank=True, null=True)
@@ -100,6 +103,19 @@ class inventory_log(models.Model):
 	turn = models.IntegerField()
 	inventory_change = models.IntegerField()
 	fid = models.ForeignKey(factories)
+
+class popularity_log(models.Model):
+	popid = models.AutoField(primary_key=True)
+	turn = models.IntegerField()
+	popularity = models.DecimalField(null=True,max_digits=11, decimal_places=10)
+	frid = models.ForeignKey(factory_retailer)
+
+class score(models.Model):
+	scoreid = models.AutoField(primary_key=True)
+	pid = models.ForeignKey(users)
+	turn = models.IntegerField()
+	score = models.IntegerField()
+
 
 class userForm(ModelForm):
     class Meta:
